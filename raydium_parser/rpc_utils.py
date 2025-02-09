@@ -3,8 +3,9 @@ import os
 from solana.rpc.api import Client
 from solders.transaction_status import UiConfirmedBlock
 
+#I know that this file was supposed to remain untouched but I had to change it to make it work (i added . on line 8 xd)
 RPC_URL = "https://api.mainnet-beta.solana.com"
-CACHE_DIR = "cached_blocks"
+CACHE_DIR = "./cached_blocks"
 
 
 def get_block(slot: int) -> UiConfirmedBlock:
