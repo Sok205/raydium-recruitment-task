@@ -69,28 +69,26 @@ def parse_block(block: UiConfirmedBlock, slot: int) -> Iterator[RaydiumSwap]:
                 decoded_bytes = base64.b64decode(base64_data)
 
                 try:
-                    # Unpack binary data assuming 10 integers
-                    unpacked_data = struct.unpack("<IIIIIIIIII", decoded_bytes[:40])
+                    pls_work = struct.unpack("<IIIIIIIIII", decoded_bytes[:40])
 
-                    # Convert the signature object to a base58-encoded string
                     signature_obj = transaction.transaction.signatures[0]
-                    signature_bytes = bytes(signature_obj)  # Convert to bytes
+                    signature_bytes = bytes(signature_obj)  
                     signature_str = base58.b58encode(signature_bytes).decode("utf-8")
 
                     yield RaydiumSwap(
                         slot=slot,
-                        index_in_slot=unpacked_data[0],
-                        index_in_tx=unpacked_data[1],
+                        index_in_slot=pls_work[0],
+                        index_in_tx=pls_work[1],
                         signature=signature_str,
                         was_successful=True, #We are checking it before 
-                        mint_in=unpacked_data[2],
-                        mint_out=unpacked_data[3],
-                        amount_in=unpacked_data[4],
-                        amount_out=unpacked_data[5],
-                        limit_amount=unpacked_data[6],
-                        limit_side="mint_in" if unpacked_data[7] == 0 else "mint_out",
-                        post_pool_balance_mint_in=unpacked_data[8],
-                        post_pool_balance_mint_out=unpacked_data[9],
+                        mint_in=pls_work[2],
+                        mint_out=pls_work[3],
+                        amount_in=pls_work[4],
+                        amount_out=pls_work[5],
+                        limit_amount=pls_work[6],
+                        limit_side="mint_in" if pls_work[7] == 0 else "mint_out",
+                        post_pool_balance_mint_in=pls_work[8],
+                        post_pool_balance_mint_out=pls_work[9],
                     )
                 except struct.error:
                     continue  # Ignore parsing errors
